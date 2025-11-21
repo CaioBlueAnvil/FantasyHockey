@@ -6,7 +6,7 @@
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 \{\
-  "name": "hockey-picks",\
+  "name": "fantasy-hockey",\
   "version": "1.0.0",\
   "private": true,\
   "dependencies": \{\
@@ -21,7 +21,15 @@
     "react-scripts": "5.0.1"\
   \},\
   "browserslist": \{\
-    "production": [">0.2%", "not dead", "not op_mini all"],\
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]\
+    "production": [\
+      ">0.2%",\
+      "not dead",\
+      "not op_mini all"\
+    ],\
+    "development": [\
+      "last 1 chrome version",\
+      "last 1 firefox version",\
+      "last 1 safari version"\
+    ]\
   \}\
 \}}

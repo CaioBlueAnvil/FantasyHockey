@@ -109,14 +109,14 @@ const TabButton = ({ active, onClick, children }) => (
 // Mock data (replace with API calls)
 // ---------------------------
 const mockLeaders = [
-  { rank: 1, client: "North Shore GC", site: "Lot A", weekPts: 9.2, month: 33.4, season: 121.7 },
-  { rank: 2, client: "Harbour Build", site: "Pier 3", weekPts: 8.6, month: 30.1, season: 118.2 },
-  { rank: 3, client: "Cedar + Steel", site: "Block 7", weekPts: 7.9, month: 28.0, season: 109.5 },
-  { rank: 4, client: "RidgeWorks", site: "South Yard", weekPts: 7.2, month: 25.2, season: 95.6 },
-  { rank: 5, client: "Orca Developments", site: "Cove Rd.", weekPts: 6.8, month: 22.9, season: 90.4 },
-  { rank: 6, client: "Cascade Homes", site: "River View", weekPts: 6.3, month: 21.5, season: 87.2 },
-  { rank: 7, client: "Summit Builders", site: "Peak Ave", weekPts: 5.9, month: 19.8, season: 82.1 },
-  { rank: 8, client: "Bayside Construction", site: "Marina Lot", weekPts: 5.4, month: 18.2, season: 76.3 },
+  { rank: 1, client: "Knappet", site: "4595 Elk Lake Dr", weekPts: 9.2, month: 33.4, season: 121.7 },
+  { rank: 2, client: "Aragon English Inn", site: "429 Lampson st", weekPts: 8.6, month: 30.1, season: 118.2 },
+  { rank: 3, client: "FBM", site: "FBM", weekPts: 7.9, month: 28.0, season: 109.5 },
+  { rank: 4, client: "Aryze", site: "902 Foul Bay Rd", weekPts: 7.2, month: 25.2, season: 95.6 },
+  { rank: 5, client: "Ironclad", site: "2100 Bear Mountain", weekPts: 6.8, month: 22.9, season: 90.4 },
+  { rank: 6, client: "knappett", site: "852 Esquimalt Rd", weekPts: 6.3, month: 21.5, season: 87.2 },
+  { rank: 7, client: "Bird", site: "UVIC", weekPts: 5.9, month: 19.8, season: 82.1 },
+  { rank: 8, client: "Ironclad", site: "3400 tillicum", weekPts: 5.4, month: 18.2, season: 76.3 },
 ];
 
 const mockGames = [

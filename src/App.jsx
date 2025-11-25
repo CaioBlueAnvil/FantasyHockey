@@ -138,10 +138,10 @@ const mockGames = [
 ];
 
 const mockMeta = {
-  weekNumber: 12,
-  lastUpdated: "Monday, Nov 18, 2024 at 9:00 AM",
+  weekNumber: 8,
+  lastUpdated: "Monday, Nov 24, 2025 at 9:00 AM",
   prizes: {
-    monthly: "Site lunch or jobsite speaker",
+    monthly: "Site lunch",
     grand: "Houseboat trip for 15",
     tiebreaker: "Guess total score"
   }

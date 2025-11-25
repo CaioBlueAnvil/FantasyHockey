@@ -109,14 +109,16 @@ const TabButton = ({ active, onClick, children }) => (
 // Mock data (replace with API calls)
 // ---------------------------
 const mockLeaders = [
-  { rank: 1, client: "Knappet", site: "4595 Elk Lake Dr", weekPts: 9.2, month: 33.4, season: 121.7 },
-  { rank: 2, client: "Aragon English Inn", site: "429 Lampson st", weekPts: 8.6, month: 30.1, season: 118.2 },
-  { rank: 3, client: "FBM", site: "FBM", weekPts: 7.9, month: 28.0, season: 109.5 },
-  { rank: 4, client: "Aryze", site: "902 Foul Bay Rd", weekPts: 7.2, month: 25.2, season: 95.6 },
-  { rank: 5, client: "Ironclad", site: "2100 Bear Mountain", weekPts: 6.8, month: 22.9, season: 90.4 },
-  { rank: 6, client: "knappett", site: "852 Esquimalt Rd", weekPts: 6.3, month: 21.5, season: 87.2 },
-  { rank: 7, client: "Bird", site: "UVIC", weekPts: 5.9, month: 19.8, season: 82.1 },
-  { rank: 8, client: "Ironclad", site: "3400 tillicum", weekPts: 5.4, month: 18.2, season: 76.3 },
+  { rank: 1, client: "Villamar Construction", site: "11392 Chalet Rd", weekPts: 0, month: 0, season: 0 },
+  { rank: 2, client: "Aragon English Inn", site: "429 Lampson st", weekPts: 0, month: 0, season: 0 },
+  { rank: 3, client: "FBM", site: "FBM", weekPts: 0, month: 0, season: 0 },
+  { rank: 4, client: "GT Mann Contracting", site: "3304 Luxton Rd", weekPts: 0, month: 0, season: 0 },
+  { rank: 5, client: "Ironclad", site: "2100 Bear Mountain", weekPts: 0, month: 0, season: 0 },
+  { rank: 6, client: "Knappett", site: "852 Esquimalt Rd", weekPts: 0, month: 0, season: 0 },
+  { rank: 7, client: "Willow Spring", site: "520 Gorge Rd E", weekPts: 0, month: 0, season: 0 },
+  { rank: 8, client: "Ironclad", site: "3400 tillicum", weekPts: 0, month: 0, season: 0 },
+  { rank: 9, client: "Verity", site: "3550 SeaBluff", weekPts: 0, month: 0, season: 0 },
+  { rank: 10, client: "EllisDon Corporation", site: "767 Douglas St", weekPts: 0, month: 0, season: 0 },
 ];
 
 const mockGames = [

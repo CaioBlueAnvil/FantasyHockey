@@ -109,16 +109,14 @@ const TabButton = ({ active, onClick, children }) => (
 // Mock data (replace with API calls)
 // ---------------------------
 const mockLeaders = [
-  { rank: 1, client: "Villamar Construction", site: "11392 Chalet Rd", weekPts: 0, month: 0, season: 0 },
-  { rank: 2, client: "Aragon English Inn", site: "429 Lampson st", weekPts: 0, month: 0, season: 0 },
-  { rank: 3, client: "FBM", site: "FBM", weekPts: 0, month: 0, season: 0 },
-  { rank: 4, client: "GT Mann Contracting", site: "3304 Luxton Rd", weekPts: 0, month: 0, season: 0 },
-  { rank: 5, client: "Ironclad", site: "2100 Bear Mountain", weekPts: 0, month: 0, season: 0 },
-  { rank: 6, client: "Knappett", site: "852 Esquimalt Rd", weekPts: 0, month: 0, season: 0 },
-  { rank: 7, client: "Willow Spring", site: "520 Gorge Rd E", weekPts: 0, month: 0, season: 0 },
-  { rank: 8, client: "Ironclad", site: "3400 tillicum", weekPts: 0, month: 0, season: 0 },
-  { rank: 9, client: "Verity", site: "3550 SeaBluff", weekPts: 0, month: 0, season: 0 },
-  { rank: 10, client: "EllisDon Corporation", site: "767 Douglas St", weekPts: 0, month: 0, season: 0 },
+  { rank: 1, client: "North Shore GC", site: "Lot A", weekPts: 9.2, month: 33.4, season: 121.7 },
+  { rank: 2, client: "Harbour Build", site: "Pier 3", weekPts: 8.6, month: 30.1, season: 118.2 },
+  { rank: 3, client: "Cedar + Steel", site: "Block 7", weekPts: 7.9, month: 28.0, season: 109.5 },
+  { rank: 4, client: "RidgeWorks", site: "South Yard", weekPts: 7.2, month: 25.2, season: 95.6 },
+  { rank: 5, client: "Orca Developments", site: "Cove Rd.", weekPts: 6.8, month: 22.9, season: 90.4 },
+  { rank: 6, client: "Cascade Homes", site: "River View", weekPts: 6.3, month: 21.5, season: 87.2 },
+  { rank: 7, client: "Summit Builders", site: "Peak Ave", weekPts: 5.9, month: 19.8, season: 82.1 },
+  { rank: 8, client: "Bayside Construction", site: "Marina Lot", weekPts: 5.4, month: 18.2, season: 76.3 },
 ];
 
 const mockGames = [
@@ -138,10 +136,10 @@ const mockGames = [
 ];
 
 const mockMeta = {
-  weekNumber: 8,
-  lastUpdated: "Monday, Nov 24, 2025 at 9:00 AM",
+  weekNumber: 12,
+  lastUpdated: "Monday, Nov 18, 2024 at 9:00 AM",
   prizes: {
-    monthly: "Site lunch",
+    monthly: "Site lunch or jobsite speaker",
     grand: "Houseboat trip for 15",
     tiebreaker: "Guess total score"
   }
@@ -151,8 +149,21 @@ const mockMeta = {
 // Main App Component
 // ---------------------------
 export default function App() {
+  // ============================================
+  // CONFIGURATION - n8n Backend
+  // ============================================
+  
+  // Your n8n self-hosted URL
+  // Change this to your actual n8n server address
+  const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
+  
+  // For production with domain/SSL:
+  // const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
+  
+  // For local development:
+  // const API_BASE_URL = 'http://localhost:5678/webhook';
+  
   const [tab, setTab] = useState(() => {
-    // Remember last tab from localStorage
     if (typeof window !== 'undefined') {
       return localStorage.getItem('hockeyPicksTab') || 'leaderboard';
     }
@@ -163,6 +174,8 @@ export default function App() {
   const [leaders, setLeaders] = useState(mockLeaders);
   const [games, setGames] = useState(mockGames);
   const [meta, setMeta] = useState(mockMeta);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Save tab preference
   useEffect(() => {
@@ -171,18 +184,126 @@ export default function App() {
     }
   }, [tab]);
 
-  // In production, replace with actual API calls:
-  // useEffect(() => {
-  //   fetch(`/api/leaderboard?scope=${scope.toLowerCase()}`)
-  //     .then(r => r.json())
-  //     .then(setLeaders);
-  // }, [scope]);
+  // Fetch leaderboard data from n8n
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const url = `${API_BASE_URL}/leaderboard?scope=${scope.toLowerCase()}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) throw new Error('Failed to fetch leaderboard');
+        
+        const result = await response.json();
+        
+        // Handle n8n response format
+        if (result.success && result.data) {
+          setLeaders(result.data);
+          
+          // Update meta info if available
+          if (result.lastUpdated) {
+            setMeta(prev => ({
+              ...prev,
+              lastUpdated: new Date(result.lastUpdated).toLocaleString('en-US', {
+                weekday: 'long',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+              })
+            }));
+          }
+          
+          if (result.weekNumber) {
+            setMeta(prev => ({ ...prev, weekNumber: result.weekNumber }));
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching leaderboard:', err);
+        setError('Failed to load leaderboard data. Showing cached data.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   fetch('/api/games?saturday=2024-11-23')
-  //     .then(r => r.json())
-  //     .then(setGames);
-  // }, []);
+    fetchLeaderboard();
+    
+    // Refresh every 5 minutes
+    const interval = setInterval(fetchLeaderboard, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [scope]);
+
+  // Fetch games data from n8n
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        // Get next Saturday's date
+        const today = new Date();
+        const daysUntilSaturday = (6 - today.getDay() + 7) % 7 || 7;
+        const nextSaturday = new Date(today);
+        nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+        const saturdayDate = nextSaturday.toISOString().split('T')[0];
+        
+        const url = `${API_BASE_URL}/games?saturday=${saturdayDate}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) throw new Error('Failed to fetch games');
+        
+        const result = await response.json();
+        
+        // Handle n8n response
+        if (result.success && result.games) {
+          setGames(result.games);
+        }
+      } catch (err) {
+        console.error('Error fetching games:', err);
+        // Keep showing mock data on error
+      }
+    };
+
+    fetchGames();
+    
+    // Refresh every 2 minutes during game days
+    const interval = setInterval(fetchGames, 2 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch meta data from n8n
+  useEffect(() => {
+    const fetchMeta = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/meta`);
+        if (!response.ok) throw new Error('Failed to fetch meta');
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          setMeta({
+            weekNumber: result.weekNumber || meta.weekNumber,
+            lastUpdated: result.lastUpdated 
+              ? new Date(result.lastUpdated).toLocaleString('en-US', {
+                  weekday: 'long',
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit'
+                })
+              : meta.lastUpdated,
+            prizes: result.prizes || meta.prizes
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching meta:', err);
+        // Keep default meta on error
+      }
+    };
+
+    fetchMeta();
+  }, []);
 
   const sortedLeaders = useMemo(() => {
     return [...leaders].sort((a, b) => {
@@ -282,6 +403,18 @@ export default function App() {
         {/* LEADERBOARD TAB */}
         {tab === "leaderboard" && (
           <Card>
+            {loading && (
+              <div className="mb-4 p-3 rounded-lg bg-blue-500/20 border border-blue-500/30 text-white text-sm">
+                Loading latest data...
+              </div>
+            )}
+            
+            {error && (
+              <div className="mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-white text-sm">
+                {error} - Showing cached data
+              </div>
+            )}
+            
             <div className="flex items-center gap-3 mb-5 flex-wrap">
               <div className="flex gap-2">
                 {["Week", "Month", "Season"].map((s) => (

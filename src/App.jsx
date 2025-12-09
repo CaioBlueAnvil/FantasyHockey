@@ -139,7 +139,7 @@ const mockMeta = {
   weekNumber: 12,
   lastUpdated: "Monday, Nov 18, 2024 at 9:00 AM",
   prizes: {
-    monthly: "Site lunch",
+    monthly: "Site lunch or jobsite speaker",
     grand: "Houseboat trip for 15",
     tiebreaker: "Guess total score"
   }
@@ -155,10 +155,10 @@ export default function App() {
   
   // Your n8n self-hosted URL
   // Change this to your actual n8n server address
-  const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
+  const API_BASE_URL = 'http://YOUR-N8N-SERVER-IP:5678/webhook';
   
   // For production with domain/SSL:
-  // const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
+  // const API_BASE_URL = 'https://n8n.yourdomain.com/webhook';
   
   // For local development:
   // const API_BASE_URL = 'http://localhost:5678/webhook';
@@ -240,14 +240,8 @@ export default function App() {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        // Get next Saturday's date
-        const today = new Date();
-        const daysUntilSaturday = (6 - today.getDay() + 7) % 7 || 7;
-        const nextSaturday = new Date(today);
-        nextSaturday.setDate(today.getDate() + daysUntilSaturday);
-        const saturdayDate = nextSaturday.toISOString().split('T')[0];
-        
-        const url = `${API_BASE_URL}/games?saturday=${saturdayDate}`;
+        // Let n8n decide which Saturday to show (no date parameter)
+        const url = `${API_BASE_URL}/games`;
         const response = await fetch(url);
         
         if (!response.ok) throw new Error('Failed to fetch games');
@@ -269,7 +263,7 @@ export default function App() {
     // Refresh every 2 minutes during game days
     const interval = setInterval(fetchGames, 2 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [API_BASE_URL]);
 
   // Fetch meta data from n8n
   useEffect(() => {

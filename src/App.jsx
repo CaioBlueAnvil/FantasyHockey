@@ -155,10 +155,10 @@ export default function App() {
   
   // Your n8n self-hosted URL
   // Change this to your actual n8n server address
-  const API_BASE_URL = 'http://YOUR-N8N-SERVER-IP:5678/webhook';
+  const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
   
   // For production with domain/SSL:
-  // const API_BASE_URL = 'https://n8n.yourdomain.com/webhook';
+  // const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
   
   // For local development:
   // const API_BASE_URL = 'http://localhost:5678/webhook';

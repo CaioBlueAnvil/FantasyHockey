@@ -109,14 +109,14 @@ const TabButton = ({ active, onClick, children }) => (
 // Mock data (replace with API calls)
 // ---------------------------
 const mockLeaders = [
-  { rank: 1, client: "North Shore GC", site: "Lot A", weekPts: 9.2, month: 33.4, season: 121.7 },
-  { rank: 2, client: "Harbour Build", site: "Pier 3", weekPts: 8.6, month: 30.1, season: 118.2 },
-  { rank: 3, client: "Cedar + Steel", site: "Block 7", weekPts: 7.9, month: 28.0, season: 109.5 },
-  { rank: 4, client: "RidgeWorks", site: "South Yard", weekPts: 7.2, month: 25.2, season: 95.6 },
-  { rank: 5, client: "Orca Developments", site: "Cove Rd.", weekPts: 6.8, month: 22.9, season: 90.4 },
-  { rank: 6, client: "Cascade Homes", site: "River View", weekPts: 6.3, month: 21.5, season: 87.2 },
-  { rank: 7, client: "Summit Builders", site: "Peak Ave", weekPts: 5.9, month: 19.8, season: 82.1 },
-  { rank: 8, client: "Bayside Construction", site: "Marina Lot", weekPts: 5.4, month: 18.2, season: 76.3 },
+  { rank: 1, client: "North Shore GC", site: "Lot A", weekPts: 9.2, monthAccuracy: 75.5, season: 121.7 },
+  { rank: 2, client: "Harbour Build", site: "Pier 3", weekPts: 8.6, monthAccuracy: 72.3, season: 118.2 },
+  { rank: 3, client: "Cedar + Steel", site: "Block 7", weekPts: 7.9, monthAccuracy: 68.1, season: 109.5 },
+  { rank: 4, client: "RidgeWorks", site: "South Yard", weekPts: 7.2, monthAccuracy: 65.4, season: 95.6 },
+  { rank: 5, client: "Orca Developments", site: "Cove Rd.", weekPts: 6.8, monthAccuracy: 63.2, season: 90.4 },
+  { rank: 6, client: "Cascade Homes", site: "River View", weekPts: 6.3, monthAccuracy: 60.8, season: 87.2 },
+  { rank: 7, client: "Summit Builders", site: "Peak Ave", weekPts: 5.9, monthAccuracy: 58.5, season: 82.1 },
+  { rank: 8, client: "Bayside Construction", site: "Marina Lot", weekPts: 5.4, monthAccuracy: 55.2, season: 76.3 },
 ];
 
 const mockGames = [
@@ -153,15 +153,7 @@ export default function App() {
   // CONFIGURATION - n8n Backend
   // ============================================
   
-  // Your n8n self-hosted URL
-  // Change this to your actual n8n server address
   const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
-  
-  // For production with domain/SSL:
-  // const API_BASE_URL = 'https://n8n.lotusscout.lat/webhook';
-  
-  // For local development:
-  // const API_BASE_URL = 'http://localhost:5678/webhook';
   
   const [tab, setTab] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -240,7 +232,6 @@ export default function App() {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        // Let n8n decide which Saturday to show (no date parameter)
         const url = `${API_BASE_URL}/games`;
         const response = await fetch(url);
         
@@ -248,19 +239,16 @@ export default function App() {
         
         const result = await response.json();
         
-        // Handle n8n response
         if (result.success && result.games) {
           setGames(result.games);
         }
       } catch (err) {
         console.error('Error fetching games:', err);
-        // Keep showing mock data on error
       }
     };
 
     fetchGames();
     
-    // Refresh every 2 minutes during game days
     const interval = setInterval(fetchGames, 2 * 60 * 1000);
     return () => clearInterval(interval);
   }, [API_BASE_URL]);
@@ -292,7 +280,6 @@ export default function App() {
         }
       } catch (err) {
         console.error('Error fetching meta:', err);
-        // Keep default meta on error
       }
     };
 
@@ -301,7 +288,9 @@ export default function App() {
 
   const sortedLeaders = useMemo(() => {
     return [...leaders].sort((a, b) => {
-      const key = scope === "Week" ? "weekPts" : scope === "Month" ? "month" : "season";
+      const key = scope === "Week" ? "weekPts" 
+                : scope === "Month" ? "monthAccuracy" 
+                : "season";
       return b[key] - a[key];
     });
   }, [leaders, scope]);
@@ -438,7 +427,7 @@ export default function App() {
                     <th className="text-left p-3 font-semibold">Client</th>
                     <th className="text-left p-3 font-semibold">Site</th>
                     <th className="text-right p-3 font-semibold">Week pts</th>
-                    <th className="text-right p-3 font-semibold">Month</th>
+                    <th className="text-right p-3 font-semibold">Month %</th>
                     <th className="text-right p-3 font-semibold">Season</th>
                     <th className="text-left p-3 font-semibold">Progress</th>
                   </tr>
@@ -459,10 +448,12 @@ export default function App() {
                       <td className="p-3 font-semibold">{r.client}</td>
                       <td className="p-3 text-white/80">{r.site}</td>
                       <td className="p-3 text-right font-mono">{r.weekPts.toFixed(1)}</td>
-                      <td className="p-3 text-right font-mono">{r.month.toFixed(1)}</td>
+                      <td className="p-3 text-right font-mono">
+                        {r.monthAccuracy ? `${r.monthAccuracy.toFixed(1)}%` : '—'}
+                      </td>
                       <td className="p-3 text-right font-mono">{r.season.toFixed(1)}</td>
                       <td className="p-3">
-                        <ProgressBar value={(r.month / 40) * 100} />
+                        <ProgressBar value={r.monthAccuracy || 0} />
                       </td>
                     </tr>
                   ))}
@@ -471,7 +462,7 @@ export default function App() {
             </div>
 
             <div className="mt-4 text-white/60 text-xs">
-              <strong>Scoring formula:</strong> Weekly points = workers last week × (correct picks / total Saturday games)
+              <strong>Scoring:</strong> Weekly points = workers ordered × % correct. Monthly winner = highest average accuracy.
             </div>
           </Card>
         )}
@@ -508,7 +499,7 @@ export default function App() {
                 {
                   step: "5",
                   title: "Watch & win",
-                  desc: "Games play on Saturday. We score Monday using: workers ordered × % correct. Leaderboard updates with weekly, monthly, and season totals."
+                  desc: "Games play on Saturday. We score Monday using: workers ordered × % correct. Monthly winner determined by average accuracy across all weeks."
                 }
               ].map((item) => (
                 <div key={item.step} className="flex gap-4 items-start p-4 rounded-xl bg-white/5 border border-white/10">
@@ -529,8 +520,8 @@ export default function App() {
             <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Prize Structure</h3>
               <ul className="text-white/80 text-sm space-y-1">
-                <li>• <strong>Monthly winner:</strong> {meta.prizes.monthly}</li>
-                <li>• <strong>Season champion:</strong> {meta.prizes.grand}</li>
+                <li>• <strong>Monthly winner:</strong> Highest average accuracy % ({meta.prizes.monthly})</li>
+                <li>• <strong>Season champion:</strong> Most total points ({meta.prizes.grand})</li>
                 <li>• <strong>Tie-breaker:</strong> {meta.prizes.tiebreaker}</li>
               </ul>
             </div>

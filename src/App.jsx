@@ -288,9 +288,7 @@ export default function App() {
 
   const sortedLeaders = useMemo(() => {
     return [...leaders].sort((a, b) => {
-      const key = scope === "Week" ? "weekPts" 
-                : scope === "Month" ? "monthAccuracy" 
-                : "season";
+      const key = scope === "Month" ? "monthAccuracy" : "season";
       return b[key] - a[key];
     });
   }, [leaders, scope]);
@@ -400,7 +398,7 @@ export default function App() {
             
             <div className="flex items-center gap-3 mb-5 flex-wrap">
               <div className="flex gap-2">
-                {["Week", "Month", "Season"].map((s) => (
+                {["Month", "Season"].map((s) => (
                   <button
                     key={s}
                     onClick={() => setScope(s)}
@@ -426,7 +424,6 @@ export default function App() {
                     <th className="text-left p-3 font-semibold">Rank</th>
                     <th className="text-left p-3 font-semibold">Client</th>
                     <th className="text-left p-3 font-semibold">Site</th>
-                    <th className="text-right p-3 font-semibold">Week pts</th>
                     <th className="text-right p-3 font-semibold">Month %</th>
                     <th className="text-right p-3 font-semibold">Season</th>
                     <th className="text-left p-3 font-semibold">Progress</th>
@@ -447,7 +444,6 @@ export default function App() {
                       </td>
                       <td className="p-3 font-semibold">{r.client}</td>
                       <td className="p-3 text-white/80">{r.site}</td>
-                      <td className="p-3 text-right font-mono">{r.weekPts.toFixed(1)}</td>
                       <td className="p-3 text-right font-mono">
                         {r.monthAccuracy ? `${r.monthAccuracy.toFixed(1)}%` : '—'}
                       </td>

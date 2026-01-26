@@ -400,7 +400,7 @@ export default function App() {
             
             <div className="flex items-center gap-3 mb-5 flex-wrap">
               <div className="flex gap-2">
-                {["Week", "Month", "Season"].map((s) => (
+                {["Month", "Season"].map((s) => (
                   <button
                     key={s}
                     onClick={() => setScope(s)}
@@ -426,7 +426,6 @@ export default function App() {
                     <th className="text-left p-3 font-semibold">Rank</th>
                     <th className="text-left p-3 font-semibold">Client</th>
                     <th className="text-left p-3 font-semibold">Site</th>
-                    <th className="text-right p-3 font-semibold">Week pts</th>
                     <th className="text-right p-3 font-semibold">Month %</th>
                     <th className="text-right p-3 font-semibold">Season</th>
                     <th className="text-left p-3 font-semibold">Progress</th>
